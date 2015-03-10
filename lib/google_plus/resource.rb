@@ -22,7 +22,8 @@ module GooglePlus
       begin
         RestClient.get "#{BASE_URI}#{resource}", headers.merge(:params => params)
       rescue RestClient::Unauthorized, RestClient::Forbidden, RestClient::BadRequest => e
-        raise GooglePlus::RequestError.new(e)
+        raise e.class.to_s + ' - ' + JSON.parse(e.response.body)['error']['message']
+        #raise GooglePlus::RequestError.new(e)
       rescue SocketError => e
         raise GooglePlus::ConnectionError.new(e)
       rescue RestClient::ResourceNotFound
